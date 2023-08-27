@@ -5,17 +5,21 @@ class Program
     {
         Console.WriteLine("Main Thread Started");
 
-        Thread t1 = new Thread(Method1){
+        ThreadStart tStart = new ThreadStart(Method1);
+
+        Thread t1 = new Thread(tStart){
             Name = "Method1 Thread"
         };
 
-        ThreadStart 
+        ThreadStart t2Start =  Method2;
 
-         Thread t2 = new Thread(Method2){
+         Thread t2 = new Thread(t2Start){
             Name = "Method2 Thread"
         };
 
-         Thread t3 = new Thread(Method3){
+        ThreadStart t3Start = delegate() { Method3();};
+
+         Thread t3 = new Thread(t3Start){
             Name = "Method3 Thread"
         };
 
