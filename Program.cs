@@ -5,10 +5,15 @@ class Program
     {
         Console.WriteLine("Main Thread Started");
 
-        // It is not TypeSafe
-        ParameterizedThreadStart ptStart = new ParameterizedThreadStart(Method1);
+        NumberHelper nHelper = new NumberHelper(10);
 
-        Thread t1 = new Thread(ptStart){
+        // It is not TypeSafe
+        // ParameterizedThreadStart ptStart = new ParameterizedThreadStart(nHelper.Method1);
+
+        //TypeSafe
+        ThreadStart tStart = new ThreadStart(nHelper.Method1);
+
+        Thread t1 = new Thread(tStart){
             Name = "Method1 Thread"
         };
 
@@ -25,26 +30,12 @@ class Program
             Name = "Method3 Thread"
         };
 
-        t1.Start(10);
-        t1.Start("Varun"); // Return error as String cannot work on loop due to type safety
+        t1.Start();
+        //t1.Start("Varun"); // Return error as String cannot work on loop due to type safety
         t2.Start();
         t3.Start();
 
         Console.WriteLine("Main Thread Finished");
-    }
-
-    public static void Method1(object o){
-
-        Console.WriteLine("Method 1 started");
-
-        int max = (int)o;
-
-        for (int i = 0; i < max; i++) {
-            Console.WriteLine(i);
-        }
-
-        Console.WriteLine("Method 1 finished");
-
     }
 
      public static void Method2(){
@@ -69,5 +60,26 @@ class Program
 
         Console.WriteLine("Method 3 finished");
 
+    }
+}
+
+
+public class NumberHelper{
+    
+    private int _number;
+
+    public NumberHelper(int number){
+        _number = number;
+    }
+
+    public void Method1(){
+
+        Console.WriteLine("Method 1 started");
+
+        for (int i = 0; i < _number; i++) {
+            Console.WriteLine(i);
+        }
+
+        Console.WriteLine("Method 1 finished");
     }
 }
