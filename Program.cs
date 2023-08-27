@@ -5,9 +5,10 @@ class Program
     {
         Console.WriteLine("Main Thread Started");
 
-        ThreadStart tStart = new ThreadStart(Method1);
+        // It is not TypeSafe
+        ParameterizedThreadStart ptStart = new ParameterizedThreadStart(Method1);
 
-        Thread t1 = new Thread(tStart){
+        Thread t1 = new Thread(ptStart){
             Name = "Method1 Thread"
         };
 
@@ -17,24 +18,28 @@ class Program
             Name = "Method2 Thread"
         };
 
+        //Used of Anonymous Function
         ThreadStart t3Start = delegate() { Method3();};
 
          Thread t3 = new Thread(t3Start){
             Name = "Method3 Thread"
         };
 
-        t1.Start();
+        t1.Start(10);
+        t1.Start("Varun"); // Return error as String cannot work on loop due to type safety
         t2.Start();
         t3.Start();
 
         Console.WriteLine("Main Thread Finished");
     }
 
-    public static void Method1(){
+    public static void Method1(object o){
 
         Console.WriteLine("Method 1 started");
 
-        for (int i = 0; i <10;i++){
+        int max = (int)o;
+
+        for (int i = 0; i < max; i++) {
             Console.WriteLine(i);
         }
 
